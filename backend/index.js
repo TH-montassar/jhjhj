@@ -7,7 +7,14 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 
 
-
+//db connection
+mongoose.connect(process.env.MONGO_DB_URI);
+mongoose.connection.on("connected", () => {
+    console.log("DB connect successfully");
+});
+mongoose.connection.on("error", (err) => {
+    console.log("mongoose failed with", err);
+});
 
 
 //listen server
