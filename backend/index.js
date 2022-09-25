@@ -1,0 +1,18 @@
+require("dotenv").config();
+//import
+const express = require("express");
+const app = express();
+const mongoose = require("mongoose");
+const helmet = require("helmet");
+const morgan = require("morgan");
+
+
+
+
+
+//listen server
+/* This is a way to set the port for the server. */
+const port = process.env.PORT || 5000;
+app.listen(port, () => {
+    console.log(`server in running on http:/localhost:${port}`);
+});
