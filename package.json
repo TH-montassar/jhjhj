@@ -7,7 +7,7 @@
     "server:dev": "cd backend && nodemon index.js",
     "client:dev": "cd frontend && npm start",
     "start": "node index.js",
-    "dev": "concurrently -n'server,client' \"npm run server:dev\" \"npm run client:dev\""
+    "dev": "concurrently -n server,client -c 'green,blue' \"npm run server:dev\" \"npm run client:dev\""
   },
   "author": "montassar themri",
   "license": "ISC",
