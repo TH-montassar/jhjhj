@@ -3,21 +3,15 @@ const UserSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required: true,
-        min: 3,
-        max: 20,
-        unique: true
+        minlength: 5,
+        unique: true,
     },
     lastName: {
         type: String,
-        min: 3,
-        max: 20
+        minlength: 5,
+        required: true
     },
-    number: {
-        type: Number,
-        default: 0000,
-        min: 8,
-        max: 8
-    },
+
     email: {
         type: String,
         unique: true,
@@ -25,36 +19,30 @@ const UserSchema = new mongoose.Schema({
         lowercase: true,
         required: true,
         min: 10,
-        max: 50
+        max: 50,
     },
     password: {
         type: String,
         required: true,
         min: 6,
         max: 20,
-
-    },
-    profilePicture: {
-        type: String,
-        default: ""
-    },
-    coverPicture: {
-        type: String,
-        default: ""
-    },
-    followers: {
-        type: Array,
-        default: []
-    },
-    following: {
-        type: Array,
-        default: []
     },
     isAdmin: {
         type: Boolean,
-        default: false
+        default: false,
     },
+    address: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Address"
+    },
+    profile: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Profile"
+    },
+    token: {
+        type: String
+    }
 }, {
-    timestamps: true
+    timestamps: true,
 });
 module.exports = mongoose.model("User", UserSchema);
