@@ -9,20 +9,10 @@ const mongoose = require("mongoose");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const compression = require("compression");
-
+const connectToDatabase = require("./config/db.ts");
 //db connection
 //mongoose.set('strictQuery', true);
-mongoose.connect(process.env.MONG_DB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-const db = mongoose.connection;
-db.on("connected", () => {
-    console.log("DB connect successfully");
-});
-db.on("error", (err) => {
-    console.log("mongoose failed with", err);
-});
+connectToDatabase();
 
 //import routes
 const userRoutes = require("./routes/user.routes");
