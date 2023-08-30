@@ -14,8 +14,8 @@ const PostSchema = new mongoose.Schema(
     },
     media: [],
     /*  post: {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "Post",
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
      }, */
   },
   {
