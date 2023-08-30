@@ -47,7 +47,7 @@ router.post("/register", async (req, res) => {
             message: "User created successfully"
         });
     } catch (err) {
-        res.status(500).json(err);
+        res.status(500).json(`${err.message} ${err.stack} `);
     }
 });
 
@@ -71,7 +71,6 @@ router.post("/login", async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             isAdmin: user.isAdmin,
-            role: user.role,
         }, process.env.TOKEN_SECRET, {
             expiresIn: "3 days"
         });
