@@ -1,59 +1,4 @@
-/**
- * @swagger
- * tags:
- *   - name: User
- *     description: Operations related to users
- * /
-/**
- * @swagger
- * /api/users/register:
- *   post:
- *     summary: Create a new user.
- *     tags:
- *       - User
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/UserRequestBody'
- *     responses:
- *       201:
- *         description: User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/UserResponse'
- */
-/**
- * @swagger
- * /api/users/login:
- *   post:
- *     summary: Login as a user.
- *     tags:
- *       - User
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *             required:
- *               - email
- *               - password
- *     responses:
- *       200:
- *         description: User logged in successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/UserResponse'
- */
+
 const router = require("express").Router();
 const {
   updateInfo,
@@ -83,3 +28,139 @@ router.put("/:user", updateInfo);
 router.post("/register", register);
 router.post("/login", login);
 module.exports = router;
+
+
+/**
+ * @swagger
+ * /api/user/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [User]
+ *     requestBody:
+ *       description: User registration data
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: User registration successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       422:
+ *         description: Email already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *             example:
+ *               message: Email already exists
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *             example:
+ *               message: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/user/login:
+ *   post:
+ *     summary: Log in a user
+ *     tags: [User]
+ *     requestBody:
+ *       description: User login data
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             example:
+ *               email: john.doe@example.com
+ *               password: mypassword
+ *     responses:
+ *       200:
+ *         description: User login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Wrong password or email
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *             example:
+ *               message: Wrong password or email
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *             example:
+ *               message: User not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *             example:
+ *               message: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/user/updateInfo:
+ *   put:
+ *     summary: Update user information
+ *     tags: [User]
+ *     responses:
+ *       200:
+ *         description: User information updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *             example:
+ *               message: Internal server error
+ * /api/user/{userID}:
+ *   get:
+ */

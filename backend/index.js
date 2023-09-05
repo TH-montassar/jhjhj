@@ -21,7 +21,7 @@ connectToDatabase();
 
 //import routes
 const userRoutes = require("./routes/user.routes");
-
+const profileRoutes = require("./routes/profile.route");
 //middleware
 /* This is a middleware that allows the server to parse the body of the request. */
 app.use(express.json());
@@ -32,10 +32,9 @@ app.use(helmet());
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 app.use(compression()); //A middleware that compresses the response body.
 
-app.use("/api/users", userRoutes);
-
-
-
+//api
+app.use("/api/user", userRoutes);
+app.use("/api/profile", profileRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 //listen server

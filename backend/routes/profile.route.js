@@ -1,26 +1,8 @@
-/**
- * @swagger
- * tags:
- *   - name: Profile
- *     description: Operations related to user profiles
- * /
-/**
- * @swagger
- * /api/profile:
- *   get:
- *     summary: Get user profile.
- *     tags:
- *       - Profile
- *     responses:
- *       200:
- *         description: User profile retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ProfileResponse'
- */
-
-const { getProfile } = require("../controllers/profile.controllers");
+const {
+  getProfile,
+  updateProfile,
+} = require("../controllers/profile.controllers");
+const { verifyToken } = require("../middlewares");
 
 const router = require("express").Router();
 
@@ -43,4 +25,63 @@ router.param("profile", async (req, res, next, id) => {
 });
 
 router.get("/profile", getProfile);
+
+const multer = require("multer");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: "./uploads",
+  filename: (req, file, cb) => {
+    return cb(
+      null,
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+    );
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  // limits: {
+  //   fileSize: 500000,
+  // },
+});
+
+router.put(
+  "/updateProfile",
+  verifyToken,
+  upload.single("avatar"),
+  updateProfile
+);
 module.exports = router;
+
+/**
+ * @swagger
+ * /api/profile/getProfile:
+ *   get:
+ *     summary: Get user profile
+ *     tags: [Profile]
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved user profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Profile'
+ *       500:
+ *         description: Internal server error
+ *
+ *
+ * /api/profile/updateProfile:
+ *   put:
+ *     summary: Update user profile
+ *     tags: [Profile]
+ *     responses:
+ *       200:
+ *         description: Successfully updated user profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Profile'
+ *       500:
+ *         description: Internal server error
+ */
