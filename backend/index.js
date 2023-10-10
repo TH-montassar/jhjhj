@@ -8,11 +8,13 @@ const bodyParser = require("body-parser");
 //import
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const swaggerUi = require("swagger-ui-express");
 const specs = require("./utils/swagger");
+
 const compression = require("compression");
 const connectToDatabase = require("./config/db.ts");
 //db connection
@@ -25,6 +27,12 @@ const profileRoutes = require("./routes/profile.route");
 //middleware
 /* This is a middleware that allows the server to parse the body of the request. */
 app.use(express.json());
+
+const corsOptions = {
+  origin: "http://localhost:5173", // Replace with your client's URL
+  credentials: true, // Enable cookies and authentication headers if needed
+};
+app.use(cors(corsOptions));
 //app.use(cors());
 /* A middleware that sets HTTP headers to help protect the app from some well-known web
 vulnerabilities. */

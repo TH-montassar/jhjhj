@@ -1,5 +1,9 @@
-import { Login } from "./pages/Login";
+import Routers from "./Routers/Routers";
 
 export default function App() {
-  return <div><Login/> </div>;
+  return (
+    <>
+      <Routers />
+    </>
+  );
 }
