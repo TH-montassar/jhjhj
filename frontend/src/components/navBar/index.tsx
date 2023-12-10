@@ -6,11 +6,41 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import { Link } from "react-router-dom";
 export const NavBar = () => {
   return (
-    <div>
-      <div></div>
-      <div></div>
+    <div className="navbar flex justify-between px-5 py-3 h-12 border-b border-solid border-gray-300">
+      <div className="left flex items-center gap-8" id="">
+        <Link to={`/`} className="">
+          <span className=" font-bold text-sm	text-indigo-700	">MontaSocial</span>
+        </Link>
+        <HomeOutlinedIcon />
+        <DarkModeOutlinedIcon />
+        <GridViewOutlinedIcon />
+        <div className="search flex  items-center gap-5 border border-gray-300 p-1 rounded-md	">
+          <SearchOutlinedIcon />
+          <input
+            className=" w-[32rem]"
+            type="text"
+            name=""
+            id=""
+            placeholder="search....."
+          />
+        </div>
+      </div>
+      <div className="right flex items-center gap-5" id="right">
+        <PersonOutlinedIcon />
+        <EmailOutlinedIcon />
+        <NotificationsOutlinedIcon />
+        <div className="use flex items-center gap-3 font-medium	">
+          <img
+            className=" w-8 h-8 rounded-[50%] object-cover"
+            src="https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            alt="Profile"
+          />
+          <span>Montassar</span>
+        </div>
+      </div>
     </div>
   );
 };

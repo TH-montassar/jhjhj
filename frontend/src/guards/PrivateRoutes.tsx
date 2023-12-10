@@ -5,7 +5,7 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const currentUser = false;
+  const currentUser = true;
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
