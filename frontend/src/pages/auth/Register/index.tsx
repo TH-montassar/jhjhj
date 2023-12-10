@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./index.css";
 export const Register = () => {
   return (
@@ -14,9 +15,11 @@ export const Register = () => {
               facere vitae officia! Commodi, cumque adipisci.
             </p>
             <span className=" text-sm">Do you have an account ?</span>
-            <button className=" w-1/2 bg-white  hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-              Login
-            </button>
+            <Link to={`/Login`}>
+              <button className=" w-1/2 bg-white  hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                Login
+              </button>
+            </Link>
           </div>
           <div className="flex-1  p-14 flex flex-col gap-14 justify-center">
             <h1 className="text-5xl text-gray-500">Register</h1>
