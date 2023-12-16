@@ -24,7 +24,7 @@ router.param("profile", async (req, res, next, id) => {
   }
 });
 
-router.get("/profile", getProfile);
+router.get("/getProfile", verifyToken, getProfile);
 
 const multer = require("multer");
 const path = require("path");
@@ -49,7 +49,10 @@ const upload = multer({
 router.put(
   "/updateProfile",
   verifyToken,
-  upload.single("avatar"),
+  upload.fields([
+    { name: "avatar", maxCount: 1 },
+    { name: "coverPicture", maxCount: 1 },
+  ]),
   updateProfile
 );
 module.exports = router;
@@ -60,6 +63,8 @@ module.exports = router;
  *   get:
  *     summary: Get user profile
  *     tags: [Profile]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Successfully retrieved user profile
@@ -84,4 +89,12 @@ module.exports = router;
  *               $ref: '#/components/schemas/Profile'
  *       500:
  *         description: Internal server error
+ */
+/**
+ * @swagger
+ * securitySchemes:
+ *   BearerAuth:
+ *     type: http
+ *     scheme: bearer
+ *     bearerFormat: JWT
  */

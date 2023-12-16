@@ -2,6 +2,7 @@ const Profile = require("../models/profile.model");
 
 //to test the route
 const updateProfile = async (req, res) => {
+  console.info("hello updateProfile ");
   const host = process.env.HOST;
   const port = process.env.PORT;
   const user = req.verifiedUser.profile;
@@ -10,8 +11,8 @@ const updateProfile = async (req, res) => {
       user,
       {
         birthday: req.body.birthday,
-        avatar: `${host}:${port}/images/${req.file.filename}`,
-        coverPicture: `${host}:${port}/images/${req.file.filename}`,
+        avatar: `${host}:${port}/images/${req.files.avatar[0].filename}`,
+        coverPicture: `${host}:${port}/images/${req.files.coverPicture[0].filename}`,
         bio: req.body.bio,
         number: req.body.number,
         RelationshipStatus: req.body.RelationshipStatus,
@@ -27,9 +28,10 @@ const updateProfile = async (req, res) => {
 };
 
 const getProfile = async (req, res) => {
-  const user = req.user.profile;
+  const profileId = req.verifiedUser.profile;
+  console.info("testPorfile", profileId);
   try {
-    const profile = await Profile.findById(user);
+    const profile = await Profile.findById(profileId);
     return res.status(200).json({
       profile,
     });

@@ -72,6 +72,8 @@ const login = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         isAdmin: user.isAdmin,
+        profile: user.profile,
+        address: user.address,
       },
       process.env.TOKEN_SECRET,
       {

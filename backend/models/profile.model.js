@@ -95,4 +95,3 @@ module.exports = mongoose.model("Profile", ProfileSchema);
  *   - name: Profile
  *     description: Operations related to user profiles
  */
-

@@ -18,7 +18,7 @@ const specs = require("./utils/swagger");
 const compression = require("compression");
 const connectToDatabase = require("./config/db.ts");
 //db connection
-//mongoose.set('strictQuery', true);
+mongoose.set("strictQuery", true);
 connectToDatabase();
 
 //import routes
