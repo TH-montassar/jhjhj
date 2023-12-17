@@ -29,7 +29,7 @@ const profileRoutes = require("./routes/profile.route");
 app.use(express.json());
 
 const corsOptions = {
-  origin: "http://localhost:5173", // Replace with your client's URL
+  origin: "http://localhost:3000", // Replace with your client's URL
   credentials: true, // Enable cookies and authentication headers if needed
 };
 app.use(cors(corsOptions));
