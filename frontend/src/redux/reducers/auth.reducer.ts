@@ -6,13 +6,15 @@ interface AuthState {
   user: object | null; // Define your user type here
   pending: boolean | null;
   error: null | string | undefined | boolean;
+  token: string | null;
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
-  user: { userName: "", lastName: "", email: "", password: "" },
+  user: null,
   pending: null,
   error: null,
+  token: localStorage.getItem("token"),
 };
 
 export const authSlice = createSlice({
@@ -32,7 +34,6 @@ export const authSlice = createSlice({
       state.pending = null;
       state.error = true;
     });
-
     builder.addCase(login.pending, (state) => {
       state.pending = true;
       state.error = null;
@@ -40,6 +41,7 @@ export const authSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.pending = false;
       state.user = action.payload;
+      state.token = action.payload.user.token;
       state.isAuthenticated = true;
     });
     builder.addCase(login.rejected, (state, action) => {

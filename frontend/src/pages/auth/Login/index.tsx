@@ -1,8 +1,59 @@
 import { Link } from "react-router-dom";
 import "./index.css";
+
+import { useState, useEffect, FC, Fragment } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import { RootState } from "../../../redux/store";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../../redux/action/auth.action";
+import { Loader } from "../../../Shared/Loader";
 export const Login = () => {
+  const [isEmpty, setIsEmpty] = useState(false);
+  //initialize inputs empty
+  const [inputs, setInputs] = useState({
+    email: "",
+    password: "",
+  });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { user, pending, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  const formSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!inputs.email || !inputs.password) {
+      setIsEmpty(true);
+      // Reset the isEmpty state to false after 1 second
+      setTimeout(() => {
+        setIsEmpty(false);
+      }, 3000);
+      return;
+    }
+    try {
+      setIsEmpty(false);
+      // @ts-ignore
+      await dispatch(login(inputs));
+    } catch (error) {
+      toast.error("Login failed. Please try again.");
+    }
+  };
+  if (isAuthenticated) {
+    navigate("/");
+  }
   return (
     <div>
+      {pending && (
+        <div>
+          <Loader />
+        </div>
+      )}
       <div className="h-screen bg-my_purple flex items-center justify-center">
         <div className="flex  bg-white w-1/2 overflow-hidden rounded-xl  min-h-[37.5rem]">
           <div className="bg flex-1 !bg-cover !bg-center  p-14 flex flex-col gap-8 text-white">
@@ -21,21 +72,33 @@ export const Login = () => {
           </div>
           <div className="flex-1  p-14 flex flex-col gap-14 justify-center">
             <h1 className="text-5xl text-gray-500">Login</h1>
-            <form className=" flex flex-col gap-8">
+            <form onSubmit={formSubmitHandler} className=" flex flex-col gap-8">
               <input
                 className=" border-b-2 solid  py-5 px-3"
                 type="text"
-                placeholder="Username"
+                value={inputs.email}
+                onChange={handleChange}
+                name="email"
+                placeholder="email"
               />
               <input
                 className="border-b-2  solid  py-5 px-3"
+                value={inputs.password}
+                onChange={handleChange}
                 type="password"
+                name="password"
                 placeholder="Password"
               />
-              <button className="w-1/2 p-3 border-none bg-[#938eef] text-white cursor-pointer ">
+              <button
+                type="submit"
+                className="w-1/2 p-3 border-none bg-[#938eef] text-white cursor-pointer "
+              >
                 Login
               </button>
             </form>
+            {isEmpty && (
+              <div className="mt-5 text-red-600 mx-auto">is empty</div>
+            )}
           </div>
         </div>
       </div>

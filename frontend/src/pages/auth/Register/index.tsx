@@ -1,11 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import "./index.css";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux";
-import { User, register } from "../../../redux/action/auth.action";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
+import { register } from "../../../redux/action/auth.action";
+import { Loader } from "../../../Shared/Loader";
 export const Register = () => {
+  const { user, pending, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -15,7 +22,7 @@ export const Register = () => {
   });
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault(); //man5alouch navigateur ya3mel relode
+    e.preventDefault(); //may5alich navigator ya3mel reload
     setForm({ ...form, [e.target.name]: e.target.value });
     /* if (Form.password !== Form.confirmPassword) {
       console.log("hello this tow passs no matech ");
@@ -33,21 +40,37 @@ export const Register = () => {
 
     console.log("Form Data:", form);
   };
-  const dispatch = useDispatch();
+
   const OnSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(register(form));
-    /*  setForm({
-      email: "",
-      password: "",
-      firstName: "",
-      lastName: "",
-      confirmPassword: "",
-    }); */
+    // @ts-ignore
+    dispatch(register(form))
+      .then(() => {
+        setForm({
+          email: "",
+          password: "",
+          firstName: "",
+          lastName: "",
+          confirmPassword: "",
+        });
+        navigate("/login");
+      }) // @ts-ignore
+      .catch((error) => {
+        console.log(error);
+      });
   };
+
+  if (isAuthenticated) {
+    return <Navigate to={"/"} />;
+  }
 
   return (
     <div>
+      {pending && (
+        <div>
+          <Loader />
+        </div>
+      )}
       <div className="h-screen bg-my_purple flex   items-center justify-center">
         <div className="flex flex-row-reverse bg-white w-1/2 overflow-hidden rounded-xl  min-h-[37.5rem]">
           <div className="bg flex-1 !bg-cover !bg-center  p-14 flex flex-col gap-8 text-white">
