@@ -1,6 +1,19 @@
 const mongoose = require("mongoose");
 function connectToDatabase() {
-  mongoose.connect(process.env.MONGO_DB_URL, {
+  /*   const uri =
+    "mongodb+srv://montassar:montassar@cluster0.shphf.mongodb.net/socialApp";
+  console.log("this is your uri ", uri); */
+  const DB = process.env.MONGO_DB_URL;
+
+  console.log("this is your uri ", DB);
+  if (!DB) {
+    console.error(
+      "MongoDB connection string is missing. Make sure MONGO_DB_URL is set."
+    );
+    return;
+  }
+
+  mongoose.connect(DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });

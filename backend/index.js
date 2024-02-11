@@ -16,7 +16,7 @@ const swaggerUi = require("swagger-ui-express");
 const specs = require("./utils/swagger");
 
 const compression = require("compression");
-const connectToDatabase = require("./config/db.ts");
+const connectToDatabase = require("./config/db.js");
 //db connection
 mongoose.set("strictQuery", true);
 connectToDatabase();

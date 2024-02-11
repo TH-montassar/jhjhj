@@ -54,6 +54,7 @@ module.exports = mongoose.model("User", UserSchema);
  * tags:
  *   - name: User
  *     description: Operations related to users
+ */
 
 /**
  * @swagger
@@ -82,4 +83,4 @@ module.exports = mongoose.model("User", UserSchema);
  *         - password
  *
  *
-*/
+ */

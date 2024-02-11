@@ -1,7 +1,8 @@
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import "./index.css";
+import toast, { Toaster } from "react-hot-toast";
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
@@ -24,25 +25,18 @@ export const Register = () => {
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault(); //may5alich navigator ya3mel reload
     setForm({ ...form, [e.target.name]: e.target.value });
-    /* if (Form.password !== Form.confirmPassword) {
-      console.log("hello this tow passs no matech ");
-      toast.error("Passwords do not match", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    } */
 
     console.log("Form Data:", form);
   };
 
   const OnSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (form.password !== form.confirmPassword) {
+      //console.log("hello this tow passs no matech ");
+      toast.error("Passwords don't match!");
+      return; // Prevent further execution if they don't match
+    }
+
     // @ts-ignore
     dispatch(register(form))
       .then(() => {
@@ -53,10 +47,15 @@ export const Register = () => {
           lastName: "",
           confirmPassword: "",
         });
-        navigate("/login");
-      }) // @ts-ignore
-      .catch((error) => {
+        // Add success toast after successful registration
+        toast.success("Registration successful!");
+        setTimeout(() => navigate("/login"), 1600); // Optional delay (adjust as needed)
+      })
+      .catch((error: any) => {
         console.log(error);
+        console.error("hello error");
+        // @ts-ignore
+        toast.error("Registration failed!", { error }); // Include error details in the toast
       });
   };
 
@@ -147,7 +146,7 @@ export const Register = () => {
           </div>
         </div>
       </div>
-      {/* <ToastContainer /> */}
+      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };

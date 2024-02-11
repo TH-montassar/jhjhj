@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { login, register } from "../action/auth.action";
+import { login, logout, register } from "../action/auth.action";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -48,6 +48,12 @@ export const authSlice = createSlice({
       state.pending = null;
       state.error = action.error.message;
       state.isAuthenticated = false;
+    });
+    builder.addCase(logout.fulfilled, (state, action) => {
+      state.user = null;
+      state.isAuthenticated = false;
+      state.token = null;
+      return state;
     });
   },
 });
