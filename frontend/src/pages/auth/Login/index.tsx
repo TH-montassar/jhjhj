@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
 import "./index.css";
-
+import toast, { Toaster } from "react-hot-toast";
 import { useState, useEffect, FC, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
 import { RootState } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../../redux/action/auth.action";
@@ -45,7 +44,8 @@ export const Login = () => {
     }
   };
   if (isAuthenticated) {
-    navigate("/");
+    toast.success("Successfully Login");
+    setTimeout(() => navigate("/"), 1600); // Optional delay (adjust as needed)
   }
   return (
     <div>
@@ -102,6 +102,7 @@ export const Login = () => {
           </div>
         </div>
       </div>
+      <Toaster position="top-right" reverseOrder={false} />
     </div>
   );
 };

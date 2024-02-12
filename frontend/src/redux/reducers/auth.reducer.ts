@@ -7,6 +7,8 @@ interface AuthState {
   pending: boolean | null;
   error: null | string | undefined | boolean;
   token: string | null;
+  message: string | null | undefined;
+  isSuccess: boolean | null;
 }
 
 const initialState: AuthState = {
@@ -14,6 +16,8 @@ const initialState: AuthState = {
   user: null,
   pending: null,
   error: null,
+  message: null,
+  isSuccess: null,
   token: localStorage.getItem("token"),
 };
 
@@ -29,10 +33,15 @@ export const authSlice = createSlice({
     builder.addCase(register.fulfilled, (state, action) => {
       state.pending = false;
       state.user = action.payload;
+      state.message = action.payload.message;
+      state.isSuccess = true;
     });
     builder.addCase(register.rejected, (state, action) => {
       state.pending = null;
       state.error = true;
+      state.message = action.error.message;
+      state.isSuccess = false;
+      //console.log("Rejected with status code:", action.error.message);
     });
     builder.addCase(login.pending, (state) => {
       state.pending = true;

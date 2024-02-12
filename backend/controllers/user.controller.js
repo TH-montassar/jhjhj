@@ -14,6 +14,7 @@ const register = async (req, res) => {
     if (user) {
       return res.status(422).json({
         message: "Email already exist",
+        status: 422,
       });
     }
     //generate new password
@@ -42,6 +43,7 @@ const register = async (req, res) => {
     return res.status(201).json({
       savedUser: savedUser,
       message: "User created successfully",
+      status: 201,
     });
   } catch (err) {
     res.status(500).json(`message :${err.message}, ${err.stack} `);

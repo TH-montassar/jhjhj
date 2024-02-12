@@ -1,7 +1,7 @@
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import "./index.css";
 import toast, { Toaster } from "react-hot-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +9,7 @@ import { RootState } from "../../../redux/store";
 import { register } from "../../../redux/action/auth.action";
 import { Loader } from "../../../Shared/Loader";
 export const Register = () => {
-  const { user, pending, isAuthenticated } = useSelector(
+  const { user, message, isSuccess, pending, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
   const navigate = useNavigate();
@@ -26,20 +26,84 @@ export const Register = () => {
     e.preventDefault(); //may5alich navigator ya3mel reload
     setForm({ ...form, [e.target.name]: e.target.value });
 
-    console.log("Form Data:", form);
+    //console.log("Form Data:", form);
   };
 
-  const OnSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
+  //const OnSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
+  //  e.preventDefault();
+  //  if (form.password !== form.confirmPassword) {
+  //    //console.log("hello this tow passs no matech ");
+  //    toast.error("Passwords don't match!");
+  //    return; // Prevent further execution if they don't match
+  //  }
+  //
+  //  // @ts-ignore
+  //  dispatch(register(form))
+  //    .then(() => {
+  //      /*  setForm({
+  //        email: "",
+  //        password: "",
+  //        firstName: "",
+  //        lastName: "",
+  //        confirmPassword: "",
+  //      }); */
+  //      // @ts-ignore
+  //      //const statusMessage = message.match(/(\d+)/);
+  //      // @ts-ignore
+  //      //onsole.log(`status is ${statusMessage[0]}`);
+  //      //console.log(`message is ${message}`);
+  //      console.log(`hello status ${user.status}`);
+  //
+  //      // @ts-ignore
+  //      if (!isSuccess) {
+  //        // @ts-ignore
+  //        toast.error(`Registration failed!Email already exist maybe`);
+  //        return;
+  //      } // Add success toast after successful registration
+  //      setForm({
+  //        email: "",
+  //        password: "",
+  //        firstName: "",
+  //        lastName: "",
+  //        confirmPassword: "",
+  //      });
+  //      toast.success(`Registration successful! ${message}`);
+  //      setTimeout(() => navigate("/login"), 1600); // Optional delay (adjust as needed)
+  //    })
+  //    .catch((error: any) => {
+  //      console.log(error);
+  //      console.error("hello error");
+  //      // @ts-ignore
+  //      toast.error("Registration failed!", { error }); // Include error details in the toast
+  //    });
+  //};
+  const OnSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (form.password !== form.confirmPassword) {
-      //console.log("hello this tow passs no matech ");
       toast.error("Passwords don't match!");
-      return; // Prevent further execution if they don't match
+      return; // Prevent further execution if passwords don't match
     }
 
-    // @ts-ignore
-    dispatch(register(form))
-      .then(() => {
+    try {
+      // Set submitting state to true
+      setSubmitting(true);
+      // @ts-ignore
+      await dispatch(register(form));
+    } catch (error) {
+      // Handle other errors
+      console.log(error);
+      console.error("hello error");
+      // @ts-ignore
+      toast.error("Registration failed!", { error }); // Include error details in the toast
+    }
+  };
+  const [submitting, setSubmitting] = useState(false);
+  useEffect(() => {
+    // Check Redux state after dispatch is complete
+    if (submitting && isSuccess !== null) {
+      if (isSuccess) {
+        // Successful registration
         setForm({
           email: "",
           password: "",
@@ -47,17 +111,15 @@ export const Register = () => {
           lastName: "",
           confirmPassword: "",
         });
-        // Add success toast after successful registration
-        toast.success("Registration successful!");
+        toast.success(`Registration successful! ${message}`);
         setTimeout(() => navigate("/login"), 1600); // Optional delay (adjust as needed)
-      })
-      .catch((error: any) => {
-        console.log(error);
-        console.error("hello error");
-        // @ts-ignore
-        toast.error("Registration failed!", { error }); // Include error details in the toast
-      });
-  };
+      } else {
+        // Registration failed
+        toast.error(`Registration failed! ${message}`);
+      }
+      setSubmitting(false); // Reset submitting state
+    }
+  }, [isSuccess, message, navigate]);
 
   if (isAuthenticated) {
     return <Navigate to={"/"} />;
