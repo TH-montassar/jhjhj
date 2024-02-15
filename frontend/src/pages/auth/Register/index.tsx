@@ -21,6 +21,13 @@ export const Register = () => {
     password: "",
     confirmPassword: "",
   });
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault(); //may5alich navigator ya3mel reload
@@ -29,73 +36,55 @@ export const Register = () => {
     //console.log("Form Data:", form);
   };
 
-  //const OnSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
-  //  e.preventDefault();
-  //  if (form.password !== form.confirmPassword) {
-  //    //console.log("hello this tow passs no matech ");
-  //    toast.error("Passwords don't match!");
-  //    return; // Prevent further execution if they don't match
-  //  }
-  //
-  //  // @ts-ignore
-  //  dispatch(register(form))
-  //    .then(() => {
-  //      /*  setForm({
-  //        email: "",
-  //        password: "",
-  //        firstName: "",
-  //        lastName: "",
-  //        confirmPassword: "",
-  //      }); */
-  //      // @ts-ignore
-  //      //const statusMessage = message.match(/(\d+)/);
-  //      // @ts-ignore
-  //      //onsole.log(`status is ${statusMessage[0]}`);
-  //      //console.log(`message is ${message}`);
-  //      console.log(`hello status ${user.status}`);
-  //
-  //      // @ts-ignore
-  //      if (!isSuccess) {
-  //        // @ts-ignore
-  //        toast.error(`Registration failed!Email already exist maybe`);
-  //        return;
-  //      } // Add success toast after successful registration
-  //      setForm({
-  //        email: "",
-  //        password: "",
-  //        firstName: "",
-  //        lastName: "",
-  //        confirmPassword: "",
-  //      });
-  //      toast.success(`Registration successful! ${message}`);
-  //      setTimeout(() => navigate("/login"), 1600); // Optional delay (adjust as needed)
-  //    })
-  //    .catch((error: any) => {
-  //      console.log(error);
-  //      console.error("hello error");
-  //      // @ts-ignore
-  //      toast.error("Registration failed!", { error }); // Include error details in the toast
-  //    });
-  //};
-  const OnSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const formValidation = () => {
+    //let localErrors = errors; not work
 
-    if (form.password !== form.confirmPassword) {
-      toast.error("Passwords don't match!");
-      return; // Prevent further execution if passwords don't match
+    let localErrors = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    };
+    if (form.firstName == "") {
+      localErrors.firstName = "Fill in your first name, please";
+    }
+    if (form.lastName == "") {
+      localErrors.lastName = "Fill in your last name, please";
     }
 
-    try {
-      // Set submitting state to true
-      setSubmitting(true);
-      // @ts-ignore
-      await dispatch(register(form));
-    } catch (error) {
-      // Handle other errors
-      console.log(error);
-      console.error("hello error");
-      // @ts-ignore
-      toast.error("Registration failed!", { error }); // Include error details in the toast
+    if (form.password !== form.confirmPassword) {
+      localErrors.confirmPassword = "Passwords don't match!";
+      //toast.error("Passwords don't match!");
+    }
+    //console.log("checik pass", form.password.length);
+    if (form.password.length < 8) {
+      localErrors.password = "Passwords must be at least 8 characters";
+    }
+    setErrors(localErrors);
+    //console.log("test validations local  :", localErrors);
+    //console.log("test validation state errors :", errors);
+    return Object.values(localErrors).every((error) => !error) ? 1 : 0;
+  };
+
+  const OnSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (formValidation()) {
+      try {
+        // Set submitting state to true
+        setSubmitting(true);
+        // @ts-ignore
+        await dispatch(register(form));
+      } catch (error) {
+        // Handle other errors
+        console.log(error);
+        console.error("hello error");
+        // @ts-ignore
+        toast.error("Registration failed!", { error }); // Include error details in the toast
+      }
+    } else {
+      console.log(" form invalid");
+      toast.error("form invalid");
     }
   };
   const [submitting, setSubmitting] = useState(false);
@@ -115,7 +104,8 @@ export const Register = () => {
         setTimeout(() => navigate("/login"), 1600); // Optional delay (adjust as needed)
       } else {
         // Registration failed
-        toast.error(`Registration failed! ${message}`);
+        // @ts-ignore
+        toast.error(`Registration failed! ${message} && ${user?.message}`);
       }
       setSubmitting(false); // Reset submitting state
     }
@@ -164,6 +154,13 @@ export const Register = () => {
                 value={form.firstName}
                 onChange={(e) => onInputChange(e)}
               />
+              {errors.firstName != "" ? (
+                <div className="text-left text-orange-700">
+                  {errors.firstName} !
+                </div>
+              ) : (
+                ""
+              )}
               <input
                 className="border-b-2  solid  py-5 px-3"
                 type="text"
@@ -172,6 +169,13 @@ export const Register = () => {
                 value={form.lastName}
                 onChange={(e) => onInputChange(e)}
               />
+              {errors.lastName != "" ? (
+                <div className="text-left text-orange-700">
+                  {errors.lastName}
+                </div>
+              ) : (
+                ""
+              )}
               <input
                 className="border-b-2  solid  py-5 px-3"
                 type="email"
@@ -189,6 +193,13 @@ export const Register = () => {
                 value={form.password}
                 onChange={(e) => onInputChange(e)}
               />
+              {errors.password != "" ? (
+                <div className="text-left text-orange-700">
+                  {errors.password}
+                </div>
+              ) : (
+                ""
+              )}
               <input
                 className="border-b-2  solid  py-5 px-3"
                 type="password"
@@ -197,6 +208,13 @@ export const Register = () => {
                 value={form.confirmPassword}
                 onChange={(e) => onInputChange(e)}
               />
+              {errors.confirmPassword != "" ? (
+                <div className="text-left text-orange-700">
+                  {errors.confirmPassword} !
+                </div>
+              ) : (
+                ""
+              )}
 
               <button
                 type="submit"
