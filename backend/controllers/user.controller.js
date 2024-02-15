@@ -17,7 +17,10 @@ const register = async (req, res) => {
         status: 422,
       });
     }
-    //generate new password
+    /*generate new password
+      it uses await and is non-blocking. This is generally preferable in applications that need to handle many requests concurrently,
+      as it allows other tasks to be executed while waiting for the hashing to complete.
+    */
     const salt = await bcrypt.genSalt(5);
     const hashPassword = await bcrypt.hash(req.body.password, salt);
     const newProfile = new Profile();
@@ -34,6 +37,8 @@ const register = async (req, res) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
+      //it will block the execution of other code until the hashing is complete.
+      //password: bcrypt.hashSync(req.body.password, 10),
       password: hashPassword,
       profile: savedProfile._id,
       address: savedAddress._id,
@@ -50,18 +55,21 @@ const register = async (req, res) => {
   }
 };
 const login = async (req, res) => {
+  /*  const enteredPassword = req.body.password;
+      const enteredEmail = req.body.password;
+  */
+  //using object destructuring
+  const { password, email } = req.body;
+
   try {
     const user = await User.findOne({
-      email: req.body.email,
+      email: email,
     });
     if (!user)
       return res.status(404).json({
         message: "User not found",
       });
-    const isPasswordValid = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid)
       return res.status(401).json({
@@ -85,6 +93,7 @@ const login = async (req, res) => {
     user.token = accessToken;
     return res.status(200).json({
       user: user,
+      token: accessToken,
     });
   } catch (error) {
     res.status(500).json(error.message);

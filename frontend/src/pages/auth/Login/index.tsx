@@ -25,22 +25,40 @@ export const Login = () => {
     (state: RootState) => state.auth
   );
 
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
+
+  const formValidation = () => {
+    let localErrors = {
+      email: "",
+      password: "",
+    };
+
+    if (inputs.email == "") {
+      localErrors.email = "Fill in your email, please";
+      //toast.error("Passwords don't match!");
+    }
+    //console.log("checik pass", form.password.length);
+    if (inputs.password == "") {
+      localErrors.password = "Fill in your password, please";
+    }
+    setErrors(localErrors);
+    //console.log("test validations local  :", localErrors);
+    //console.log("test validation state errors :", errors);
+    return Object.values(localErrors).every((error) => !error) ? 1 : 0;
+  };
   const formSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!inputs.email || !inputs.password) {
-      setIsEmpty(true);
-      // Reset the isEmpty state to false after 1 second
-      setTimeout(() => {
-        setIsEmpty(false);
-      }, 3000);
-      return;
-    }
-    try {
-      setIsEmpty(false);
-      // @ts-ignore
-      await dispatch(login(inputs));
-    } catch (error) {
-      toast.error("Login failed. Please try again.");
+
+    if (formValidation()) {
+      try {
+        // @ts-ignore
+        await dispatch(login(inputs));
+      } catch (error) {
+        toast.error("Login failed. Please try again.");
+      }
     }
   };
   if (isAuthenticated) {
@@ -81,6 +99,11 @@ export const Login = () => {
                 name="email"
                 placeholder="email"
               />
+              {errors.email != "" ? (
+                <div className="text-left text-orange-700">{errors.email}</div>
+              ) : (
+                ""
+              )}
               <input
                 className="border-b-2  solid  py-5 px-3"
                 value={inputs.password}
@@ -89,6 +112,13 @@ export const Login = () => {
                 name="password"
                 placeholder="Password"
               />
+              {errors.password != "" ? (
+                <div className="text-left text-orange-700">
+                  {errors.password}
+                </div>
+              ) : (
+                ""
+              )}
               <button
                 type="submit"
                 className="w-1/2 p-3 border-none bg-[#938eef] text-white cursor-pointer "
