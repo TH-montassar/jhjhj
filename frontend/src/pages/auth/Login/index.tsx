@@ -21,7 +21,7 @@ export const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, pending, isAuthenticated } = useSelector(
+  const { user, message, pending, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -49,18 +49,29 @@ export const Login = () => {
     //console.log("test validation state errors :", errors);
     return Object.values(localErrors).every((error) => !error) ? 1 : 0;
   };
+  const [submitting, setSubmitting] = useState(false);
+
   const formSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    //console.log("error is ", error);
     if (formValidation()) {
       try {
         // @ts-ignore
         await dispatch(login(inputs));
+        setSubmitting(true);
       } catch (error) {
-        toast.error("Login failed. Please try again.");
+        // @ts-ignore
+        toast.error("Login failed. Please try again.", error);
       }
     }
   };
+  useEffect(() => {
+    if (message && submitting) {
+      // @ts-ignore
+      toast.error(message);
+    }
+    setSubmitting(false);
+  }, [message, submitting]);
   if (isAuthenticated) {
     toast.success("Successfully Login");
     setTimeout(() => navigate("/"), 1600); // Optional delay (adjust as needed)

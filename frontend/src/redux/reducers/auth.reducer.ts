@@ -29,6 +29,7 @@ export const authSlice = createSlice({
     builder.addCase(register.pending, (state) => {
       state.pending = true;
       state.error = false;
+      state.isSuccess = true;
     });
     builder.addCase(register.fulfilled, (state, action) => {
       state.pending = false;
@@ -37,11 +38,12 @@ export const authSlice = createSlice({
       state.isSuccess = true;
     });
     builder.addCase(register.rejected, (state, action) => {
-      state.pending = null;
-      state.error = true;
-      state.message = action.error.message;
+      state.pending = false;
       state.isSuccess = false;
-      //console.log("Rejected with status code:", action.error.message);
+      state.error = action.error.message;
+      // @ts-ignore
+      state.message = action.payload.message;
+      state.isAuthenticated = false;
     });
     builder.addCase(login.pending, (state) => {
       state.pending = true;
@@ -54,8 +56,10 @@ export const authSlice = createSlice({
       state.isAuthenticated = true;
     });
     builder.addCase(login.rejected, (state, action) => {
-      state.pending = null;
-      state.error = action.error.message;
+      state.pending = false;
+      // @ts-ignore proble
+      state.message = action.payload.message;
+      //state.error = action.error.message;
       state.isAuthenticated = false;
     });
     builder.addCase(logout.fulfilled, (state, action) => {

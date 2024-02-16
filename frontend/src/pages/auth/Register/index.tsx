@@ -9,9 +9,8 @@ import { RootState } from "../../../redux/store";
 import { register } from "../../../redux/action/auth.action";
 import { Loader } from "../../../Shared/Loader";
 export const Register = () => {
-  const { user, message, isSuccess, pending, isAuthenticated } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { user, error, message, isSuccess, pending, isAuthenticated } =
+    useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [form, setForm] = useState({
@@ -66,31 +65,31 @@ export const Register = () => {
     //console.log("test validation state errors :", errors);
     return Object.values(localErrors).every((error) => !error) ? 1 : 0;
   };
-
+  const [submitting, setSubmitting] = useState(false);
   const OnSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formValidation()) {
       try {
-        // Set submitting state to true
-        setSubmitting(true);
         // @ts-ignore
         await dispatch(register(form));
-      } catch (error) {
+        // Set submitting state to true
+        setSubmitting(true);
+      } catch (error: any) {
         // Handle other errors
         console.log(error);
         console.error("hello error");
-        // @ts-ignore
-        toast.error("Registration failed!", { error }); // Include error details in the toast
+        toast.error("Registration failed!", error); // Include error details in the toast
       }
     } else {
       console.log(" form invalid");
       toast.error("form invalid");
     }
   };
-  const [submitting, setSubmitting] = useState(false);
+  console.log(message);
+  console.log(`isSuccess =${isSuccess}`);
+  console.log(`submitting = ${submitting}`);
   useEffect(() => {
-    // Check Redux state after dispatch is complete
-    if (submitting && isSuccess !== null) {
+    if (submitting) {
       if (isSuccess) {
         // Successful registration
         setForm({
@@ -101,15 +100,19 @@ export const Register = () => {
           confirmPassword: "",
         });
         toast.success(`Registration successful! ${message}`);
+        console.log(message);
         setTimeout(() => navigate("/login"), 1600); // Optional delay (adjust as needed)
-      } else {
+      }
+      if (!isSuccess) {
         // Registration failed
         // @ts-ignore
-        toast.error(`Registration failed! ${message} && ${user?.message}`);
+        toast.error(`Registration failed! ${message} `);
+        console.log(message);
       }
-      setSubmitting(false); // Reset submitting state
     }
-  }, [isSuccess, message, navigate]);
+
+    setSubmitting(false); // Reset submitting state
+  }, [isSuccess, message, navigate, submitting]);
 
   if (isAuthenticated) {
     return <Navigate to={"/"} />;

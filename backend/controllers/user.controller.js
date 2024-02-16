@@ -51,7 +51,12 @@ const register = async (req, res) => {
       status: 201,
     });
   } catch (err) {
-    res.status(500).json(`message :${err.message}, ${err.stack} `);
+    //res.status(500).json(`message :${err.message}, ${err.stack} `);
+    res.status(500).json({
+      message: err.message,
+      stack: err.stack,
+      status: 500,
+    });
   }
 };
 const login = async (req, res) => {
