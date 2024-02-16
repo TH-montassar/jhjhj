@@ -66,14 +66,18 @@ export const Login = () => {
     }
   };
   useEffect(() => {
-    if (message && submitting) {
-      // @ts-ignore
-      toast.error(message);
+    if (submitting) {
+      if (message && submitting) {
+        // @ts-ignore
+        toast.error(message);
+      }
+      if (!message && submitting) {
+        toast.success("Successfully Login");
+      }
     }
     setSubmitting(false);
   }, [message, submitting]);
   if (isAuthenticated) {
-    toast.success("Successfully Login");
     setTimeout(() => navigate("/"), 1600); // Optional delay (adjust as needed)
   }
   return (

@@ -52,6 +52,7 @@ export const authSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.pending = false;
       state.user = action.payload;
+      state.message = action.payload.message;
       state.token = action.payload.user.token;
       state.isAuthenticated = true;
     });
