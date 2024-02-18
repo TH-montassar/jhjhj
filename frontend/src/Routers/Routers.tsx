@@ -8,8 +8,24 @@ import { Home } from "../pages/home";
 import { Profile } from "../pages/profile";
 import { ProtectedRoute } from "../guards/PrivateRoutes";
 import { Layout } from "../layout";
+import { setAuthToken } from "../utils/setAuthToken";
+import { authCheck, logout } from "../redux/action/auth.action";
+import { useEffect } from "react";
+import { store } from "../redux/store";
 
 const Routers = () => {
+  useEffect(() => {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+    // @ts-ignore
+    store.dispatch(authCheck());
+
+    window.addEventListener("storage", () => {
+      // @ts-ignore
+      if (!localStorage.token) store.dispatch(logout());
+    });
+  }, []);
   const routes = BRouter([
     {
       path: "/",

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { login, logout, register } from "../action/auth.action";
+import { authCheck, login, logout, register } from "../action/auth.action";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -51,9 +51,9 @@ export const authSlice = createSlice({
     });
     builder.addCase(login.fulfilled, (state, action) => {
       state.pending = false;
-      state.user = action.payload;
+      state.user = action.payload.user;
       state.message = action.payload.message;
-      state.token = action.payload.user.token;
+      // state.token = action.payload.token;
       state.isAuthenticated = true;
     });
     builder.addCase(login.rejected, (state, action) => {
@@ -68,6 +68,27 @@ export const authSlice = createSlice({
       state.isAuthenticated = false;
       state.token = null;
       return state;
+    });
+
+    builder.addCase(authCheck.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.isAuthenticated = true;
+      state.pending = false;
+      return state;
+    });
+
+    builder.addCase(authCheck.pending, (state, action) => {
+      state.pending = true;
+      return state;
+    });
+
+    builder.addCase(authCheck.rejected, (state, action) => {
+      state.pending = false;
+      state.isAuthenticated = false;
+      // @ts-ignore proble
+      state.error = action.payload.message; // Access the error message from action.payload
+      state.isSuccess = false;
+      state.user = null;
     });
   },
 });

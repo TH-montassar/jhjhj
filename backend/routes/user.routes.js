@@ -1,10 +1,11 @@
-
 const router = require("express").Router();
 const {
   updateInfo,
   register,
   login,
+  authCheck,
 } = require("../controllers/user.controller");
+const verifyToken = require("../middlewares/verifyToken");
 const User = require("../models/user.model");
 router.param("user", async (req, res, next, id) => {
   try {
@@ -27,8 +28,9 @@ router.param("user", async (req, res, next, id) => {
 router.put("/:user", updateInfo);
 router.post("/register", register);
 router.post("/login", login);
-module.exports = router;
+router.get("/check", verifyToken, authCheck);
 
+module.exports = router;
 
 /**
  * @swagger

@@ -7,7 +7,19 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 export const NavBar = () => {
+  interface User {
+    firstName: string;
+    lastName: string;
+
+    // Add other properties as needed
+  }
+
+  const { user, message, pending, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
   return (
     <div className="navbar flex justify-between px-5 py-3 h-12 border-b border-solid border-gray-300">
       <div className="left flex items-center gap-8" id="">
@@ -38,7 +50,9 @@ export const NavBar = () => {
             src="https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             alt="Profile"
           />
-          <span>Montassar</span>
+          <span>
+            {(user as User).firstName} {(user as User).lastName}
+          </span>
         </div>
       </div>
     </div>

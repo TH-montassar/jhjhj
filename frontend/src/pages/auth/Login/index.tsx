@@ -5,7 +5,7 @@ import { useState, useEffect, FC, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../../redux/action/auth.action";
+import { authCheck, login } from "../../../redux/action/auth.action";
 import { Loader } from "../../../Shared/Loader";
 export const Login = () => {
   const [isEmpty, setIsEmpty] = useState(false);
@@ -58,6 +58,8 @@ export const Login = () => {
       try {
         // @ts-ignore
         await dispatch(login(inputs));
+        // @ts-ignore
+        await dispatch(authCheck());
         setSubmitting(true);
       } catch (error) {
         // @ts-ignore

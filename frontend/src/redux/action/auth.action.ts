@@ -1,12 +1,7 @@
 import { instance } from "../../apis/api.instance";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { setAuthToken } from "../../utils/setAuthToken";
 
-/* export const register = createAsyncThunk("register", async (user) => {
-  const res = await instance.post("/user/register", user);
-  console.log("hello", res.data);
-  return res.data;
-});
- */
 export const register = createAsyncThunk(
   "register",
   async (user, { rejectWithValue }) => {
@@ -24,7 +19,8 @@ export const login = createAsyncThunk(
   async (userLog, { rejectWithValue }) => {
     try {
       const res = await instance.post("/user/login", userLog);
-      localStorage.setItem("userInfo", JSON.stringify(userLog));
+      //localStorage.setItem("userInfo", JSON.stringify(userLog));
+      setAuthToken(res.data.token);
       return res.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -37,8 +33,27 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk("logout", async () => {
   try {
     await localStorage.removeItem("userInfo");
-  } catch (error) {
+    await localStorage.removeItem("token");
+  } catch (error: any) {
     // Handle any errors that might occur during localStorage removal
     console.error("Error removing user info from localStorage:", error);
   }
 });
+
+export const authCheck = createAsyncThunk(
+  "authCheck",
+  async (_, { rejectWithValue }) => {
+    if (localStorage.getItem("token")) {
+      setAuthToken(localStorage.getItem("token"));
+    }
+    try {
+      const res = await instance.get("user/check");
+      return res.data;
+    } catch (error: any) {
+      console.error("Error removing user info from localStorage:", error);
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);

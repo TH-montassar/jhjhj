@@ -1,6 +1,8 @@
-import React from "react";
-import { logout } from "../../redux/action/auth.action";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { authCheck, logout } from "../../redux/action/auth.action";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthToken } from "../../utils/setAuthToken";
+import { RootState, store } from "../../redux/store";
 
 export const Home = () => {
   const dispatch = useDispatch();

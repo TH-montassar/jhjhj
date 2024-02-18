@@ -72,7 +72,7 @@ const login = async (req, res) => {
     });
     if (!user)
       return res.status(404).json({
-        message: "User not found",
+        message: "wrong password or email",
       });
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -95,16 +95,32 @@ const login = async (req, res) => {
         expiresIn: "3 days",
       }
     );
-    user.token = accessToken;
+    //user.token = accessToken;
     return res.status(200).json({
       user: user,
-      //token: accessToken,
+      token: accessToken,
+      //message: "connect successfully",
     });
   } catch (error) {
     res.status(500).json(error.message);
   }
 };
 const updateInfo = async (req, res) => {};
+
+const authCheck = async (req, res) => {
+  try {
+    const user = await User.findById(req.verifiedUser._id)
+      .populate("address")
+      .populate({ path: "profile", select: "avatar birthday " });
+    if (!user) {
+      return res.status(404).json({ message: "not found User" });
+    } else {
+      return res.status(200).json(user);
+    }
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+};
 
 /* exports.updateInfo = updateInfo;
 exports.register = register;
@@ -113,4 +129,5 @@ module.exports = {
   updateInfo,
   register,
   login,
+  authCheck,
 };
