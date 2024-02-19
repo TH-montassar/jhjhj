@@ -12,6 +12,7 @@ import { setAuthToken } from "../utils/setAuthToken";
 import { authCheck, logout } from "../redux/action/auth.action";
 import { useEffect } from "react";
 import { store } from "../redux/store";
+import { Notfound } from "../components/notFound";
 
 const Routers = () => {
   useEffect(() => {
@@ -42,6 +43,7 @@ const Routers = () => {
 
     { path: "/login", element: <Login /> },
     { path: "/Register", element: <Register /> },
+    { path: "/*", element: <Notfound /> },
   ]);
   return (
     <>

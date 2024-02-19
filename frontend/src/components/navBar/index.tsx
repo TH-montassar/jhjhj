@@ -13,13 +13,12 @@ export const NavBar = () => {
   interface User {
     firstName: string;
     lastName: string;
-
-    // Add other properties as needed
   }
 
   const { user, message, pending, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
+  const currentUser = user as User;
   return (
     <div className="navbar flex justify-between px-5 py-3 h-12 border-b border-solid border-gray-300">
       <div className="left flex items-center gap-8" id="">
@@ -51,7 +50,7 @@ export const NavBar = () => {
             alt="Profile"
           />
           <span>
-            {(user as User).firstName} {(user as User).lastName}
+            {currentUser.firstName} {currentUser.lastName}
           </span>
         </div>
       </div>
