@@ -8,25 +8,9 @@ import { Home } from "../pages/home";
 import { Profile } from "../pages/profile";
 import { ProtectedRoute } from "../guards/PrivateRoutes";
 import { Layout } from "../layout";
-import { setAuthToken } from "../utils/setAuthToken";
-import { authCheck, logout } from "../redux/action/auth.action";
-import { useEffect } from "react";
-import { store } from "../redux/store";
 import { Notfound } from "../components/notFound";
 
 const Routers = () => {
-  useEffect(() => {
-    if (localStorage.token) {
-      setAuthToken(localStorage.token);
-    }
-    // @ts-ignore
-    store.dispatch(authCheck());
-
-    window.addEventListener("storage", () => {
-      // @ts-ignore
-      if (!localStorage.token) store.dispatch(logout());
-    });
-  }, []);
   const routes = BRouter([
     {
       path: "/",
@@ -39,11 +23,11 @@ const Routers = () => {
         { path: "/", element: <Home /> },
         { path: "/profile/:id", element: <Profile /> },
       ],
+      errorElement: <Notfound />,
     },
 
-    { path: "/login", element: <Login /> },
-    { path: "/Register", element: <Register /> },
-    { path: "/*", element: <Notfound /> },
+    { path: "/login", element: <Login />, errorElement: <Notfound /> },
+    { path: "/Register", element: <Register />, errorElement: <Notfound /> },
   ]);
   return (
     <>
