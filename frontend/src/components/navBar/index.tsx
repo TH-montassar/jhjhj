@@ -20,7 +20,7 @@ export const NavBar = () => {
   );
   const currentUser = user as User;
   return (
-    <div className="navbar flex justify-between px-5 py-3 h-12 border-b border-solid border-gray-300">
+    <div className="navbar flex justify-between px-5 py-3 h-12 border-b border-solid border-gray-300 sticky top-0 bg-white">
       <div className="left flex items-center gap-8" id="">
         <Link to={`/`} className="">
           <span className=" font-bold text-sm	text-indigo-700	">MontaSocial</span>
