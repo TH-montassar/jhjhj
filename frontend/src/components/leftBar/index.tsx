@@ -15,7 +15,6 @@ import Messages from "../../assets/messages.png";
 import Tutorials from "../../assets/tutorials.png";
 import Videos from "../../assets/videos.png";
 import Watch from "../../assets/watch.png";
-import "./index.css";
 export const LeftBar = () => {
   interface User {
     firstName: string;
